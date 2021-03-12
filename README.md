@@ -1,4 +1,4 @@
-<h1 align="center"><b>Adminstrtor Bot</b></h1>
+<h1 align="center"><b>Adminstrator Bot</b></h1>
 <h4 align="center">A Simple Admin Bot In Telethon Which Has All Basic Admin Command</h4>
 
 
