@@ -1,0 +1,1 @@
+admin: python -m adminbot
