@@ -25,7 +25,7 @@
 
 """
 from bot import *
-admin_cmd() = cmd()
+admin_cmd = cmd
 
 # =================== CONSTANT ===================
 PP_TOO_SMOL = "`The image is too small`"
