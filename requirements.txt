@@ -1,2 +1,2 @@
-utilsrobot==0.1
+utilsrobot==0.2
 requests
