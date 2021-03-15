@@ -497,11 +497,11 @@ async def _(event):
     if msg and msg.media:
         bot_api_file_id = pack_bot_file_id(msg.media)
         add_welcome_setting(event.chat_id, msg.message, True, 0, bot_api_file_id)
-        await event.edit("Welcome note saved. ")
+        await event.reply("Welcome note saved. ")
     else:
         input_str = event.text.split(None, 1)
         add_welcome_setting(event.chat_id, input_str[1], True, 0, None)
-        await event.edit("Welcome note saved. ")
+        await event.reply("Welcome note saved. ")
 
 
 @admin_cmd("clearwelcome")  # pylint:disable=E0602
@@ -510,7 +510,7 @@ async def _(event):
         return
     cws = get_current_welcome_settings(event.chat_id)
     rm_welcome_setting(event.chat_id)
-    await event.edit(
+    await event.reply(
         "Welcome note cleared. "
         + "The previous welcome message was `{}`.".format(cws.custom_welcome_message)
     )
@@ -522,12 +522,12 @@ async def _(event):
         return
     cws = get_current_welcome_settings(event.chat_id)
     if hasattr(cws, "custom_welcome_message"):
-        await event.edit(
+        await event.reply(
             "Welcome note found. "
             + "Your welcome message is\n\n`{}`.".format(cws.custom_welcome_message)
         )
     else:
-        await event.edit("No Welcome Message found")
+        await event.reply("No Welcome Message found")
 
 
 print("Admin Bot Started !!")
