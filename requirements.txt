@@ -1,2 +1,3 @@
 utilsrobot==0.5
 requests
+psycopg2
