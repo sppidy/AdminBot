@@ -489,7 +489,7 @@ async def _(event):
             update_previous_welcome(event.chat_id, current_message.id)
 
 
-@admin_cmd("savewelcome")  # pylint:disable=E0602
+@admin_cmd("savewelcome",is_args=True)  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
@@ -504,7 +504,7 @@ async def _(event):
         await event.reply("Welcome note saved. ")
 
 
-@admin_cmd("clearwelcome")  # pylint:disable=E0602
+@admin_cmd("clearwelcome",is_args=True)  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
