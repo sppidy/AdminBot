@@ -31,6 +31,7 @@ from telethon.utils import pack_bot_file_id
 import bot.sql.welcomesql
 import bot.sql.filtersql
 import logging
+from logging import DEBUG, INFO, basicConfig, getLogger
 
 # =================== CONSTANT ===================
 PP_TOO_SMOL = "`The image is too small`"
