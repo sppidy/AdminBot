@@ -520,7 +520,7 @@ async def _(event):
     )
 
 
-@admin_cmd("welcome")
+@admin_cmd("welcome", is_args="simple")
 @only_groups
 @is_bot_admin
 @is_admin
@@ -653,7 +653,7 @@ async def on_snip_delete(event):
     await event.reply(f"filter {name} deleted successfully")
 
 
-@admin_cmd("clearallfilters",is_args=False)
+@admin_cmd("clearallfilters",is_args="simple")
 @only_groups
 @is_bot_admin
 @is_admin
