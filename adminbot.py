@@ -520,7 +520,7 @@ async def _(event):
     )
 
 
-@admin_cmd("welcome", is_args="simple")
+@admin_cmd("welcome", is_args="False")
 @only_groups
 @is_bot_admin
 @is_admin
@@ -583,7 +583,7 @@ async def on_snip(event):
                 last_triggered_filters[event.chat_id].remove(name)
 
 
-@admin_cmd("savefilter",is_args="simple")
+@admin_cmd("savefilter",is_args=True)
 @only_groups
 @is_bot_admin
 @is_admin
@@ -618,7 +618,7 @@ async def on_snip_save(event):
         await event.reply("Reply to a message with `savefilter keyword` to save the filter")
 
 
-@admin_cmd("filters",is_args="simple")
+@admin_cmd("listfilters",is_args=True)
 async def on_snip_list(event):
     all_snips = get_all_filters(event.chat_id)
     OUT_STR = "Available Filters in the Current Chat:\n"
@@ -643,7 +643,7 @@ async def on_snip_list(event):
         await event.reply(OUT_STR)
 
 
-@admin_cmd("clearfilter",is_args="simple")
+@admin_cmd("clearfilter",is_args=True)
 @only_groups
 @is_bot_admin
 @is_admin
@@ -653,7 +653,7 @@ async def on_snip_delete(event):
     await event.reply(f"filter {name} deleted successfully")
 
 
-@admin_cmd("clearallfilters",is_args="simple")
+@admin_cmd("clearallfilters",is_args=False)
 @only_groups
 @is_bot_admin
 @is_admin
