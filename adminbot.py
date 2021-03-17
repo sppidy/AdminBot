@@ -28,8 +28,18 @@ from bot import *
 admin_cmd = cmd
 from telethon import events
 from telethon.utils import pack_bot_file_id
-import bot.sql.welcomesql
-import bot.sql.filtersql
+from bot.sql.welcomesql  import (
+    add_welcome_setting,
+    get_current_welcome_settings,
+    rm_welcome_setting,
+    update_previous_welcome,
+)
+from bot.sql.filtersql import (
+    add_filter,
+    get_all_filters,
+    remove_all_filters,
+    remove_filter,
+)
 import logging
 from logging import DEBUG, INFO, basicConfig, getLogger
 
@@ -622,7 +632,9 @@ async def on_snip_save(event):
         await event.reply("Reply to a message with `savefilter keyword` to save the filter")
 
 
-@admin_cmd("listfilters",is_args=True)
+@admin_cmd("filters",is_args=True)
+@only_groups
+@is_bot_admin
 async def on_snip_list(event):
     all_snips = get_all_filters(event.chat_id)
     OUT_STR = "Available Filters in the Current Chat:\n"
