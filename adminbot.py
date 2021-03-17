@@ -30,6 +30,7 @@ from telethon import events
 from telethon.utils import pack_bot_file_id
 import bot.sql.welcomesql
 import bot.sql.filtersql
+import logging
 
 # =================== CONSTANT ===================
 PP_TOO_SMOL = "`The image is too small`"
@@ -74,6 +75,8 @@ UNBAN_RIGHTS = ChatBannedRights(
 MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
 adminbot = adminbot
 UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
+
+basicConfig(format="%(name)s - %(message)s", level=INFO)
 #==========================================================================
 # For PMs Of bot
 
