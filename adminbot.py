@@ -652,7 +652,7 @@ async def on_snip_list(event):
     if len(OUT_STR) > 4096:
         with io.BytesIO(str.encode(OUT_STR)) as out_file:
             out_file.name = "filters.text"
-            await jarvis.send_file(
+            await adminbot.send_file(
                 event.chat_id,
                 out_file,
                 force_document=True,
@@ -686,7 +686,7 @@ async def on_all_snip_delete(event):
 @adminbot.on(events.NewMessage(pattern=r'\#(\S+)',incoming=True))
 async def on_snip(event):
     name = event.pattern_match.group(1)
-    snip = get_snips(name)
+    snip = get_snips(name,event.chat_id)
     if snip:
         if snip.snip_type == TYPE_PHOTO:
             media = types.InputPhoto(
@@ -732,7 +732,7 @@ async def on_snip_save(event):
                 snip['id'] = media.id
                 snip['hash'] = media.access_hash
                 snip['fr'] = media.file_reference
-        add_snip(name, snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr'))
+        add_snip(name, snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr'), event.chat_id)
         await event.reply("Note {name} saved successfully. Get it with #{name}".format(name=name))
     else:
         await event.reply("Reply to a message with `snips keyword` to save the snip")
@@ -740,7 +740,7 @@ async def on_snip_save(event):
 
 @admin_cmd("notes", is_args=False)
 async def on_snip_list(event):
-    all_snips = get_all_snips()
+    all_snips = get_all_snips(event.chat_id)
     OUT_STR = "Notes Available in Current Chat:\n"
     if len(all_snips) > 0:
         for a_snip in all_snips:
@@ -749,8 +749,8 @@ async def on_snip_list(event):
         OUT_STR = "No Notes Found in This Chat"
     if len(OUT_STR) > 4096:
         with io.BytesIO(str.encode(OUT_STR)) as out_file:
-            out_file.name = "snips.text"
-            await borg.send_file(
+            out_file.name = "notes.txt"
+            await adminbot.send_file(
                 event.chat_id,
                 out_file,
                 force_document=True,
@@ -766,7 +766,7 @@ async def on_snip_list(event):
 @admin_cmd("clear", is_args="notes1")
 async def on_snip_delete(event):
     name = event.pattern_match.group(1)
-    remove_snip(name)
+    remove_snip(name,event.chat_id)
     await event.reply("Note `#{}` deleted successfully".format(name))
 	
 print("Admin Bot Started !!")
