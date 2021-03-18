@@ -40,6 +40,12 @@ from bot.sql.filtersql import (
     remove_all_filters,
     remove_filter,
 )
+from bot.sql.notessql import (
+	get_snips,
+	add_snip,
+	remove_snip,
+	get_all_snips,
+)
 import logging
 from logging import DEBUG, INFO, basicConfig, getLogger
 
@@ -627,9 +633,9 @@ async def on_snip_save(event):
             snip.get("hash"),
             snip.get("fr"),
         )
-        await event.reply(f"filter {name} saved successfully. Get it with {name}")
+        await event.reply(f"Filter {name} saved successfully. Get it with `{name}`")
     else:
-        await event.reply("Reply to a message with `savefilter keyword` to save the filter")
+        await event.reply("Reply to a message with `/savefilter <keyword>` to save the filter")
 
 
 @admin_cmd("filters",is_args=True)
@@ -642,7 +648,7 @@ async def on_snip_list(event):
         for a_snip in all_snips:
             OUT_STR += f"👉 {a_snip.keyword} \n"
     else:
-        OUT_STR = "No Filters. Start Saving using `.savefilter`"
+        OUT_STR = "No Filters in Current Chat"
     if len(OUT_STR) > 4096:
         with io.BytesIO(str.encode(OUT_STR)) as out_file:
             out_file.name = "filters.text"
@@ -666,7 +672,7 @@ async def on_snip_list(event):
 async def on_snip_delete(event):
     name = event.pattern_match.group(1)
     remove_filter(event.chat_id, name)
-    await event.reply(f"filter {name} deleted successfully")
+    await event.reply(f"Filter `{name}` deleted successfully")
 
 
 @admin_cmd("clearallfilters",is_args=False)
@@ -675,8 +681,94 @@ async def on_snip_delete(event):
 @is_admin
 async def on_all_snip_delete(event):
     remove_all_filters(event.chat_id)
-    await event.reply(f"filters **in current chat** deleted successfully")
+    await event.reply(f"Filters **in current chat** deleted successfully")
 
+@adminbot.on(events.NewMessage(pattern=r'\#(\S+)',incoming=True))
+async def on_snip(event):
+    name = event.pattern_match.group(1)
+    snip = get_snips(name)
+    if snip:
+        if snip.snip_type == TYPE_PHOTO:
+            media = types.InputPhoto(
+                int(snip.media_id),
+                int(snip.media_access_hash),
+                snip.media_file_reference
+            )
+        elif snip.snip_type == TYPE_DOCUMENT:
+            media = types.InputDocument(
+                int(snip.media_id),
+                int(snip.media_access_hash),
+                snip.media_file_reference
+            )
+        else:
+            media = None
+        message_id = event.message.id
+        if event.reply_to_msg_id:
+            message_id = event.reply_to_msg_id
+        await event.client.send_message(
+            event.chat_id,
+            snip.reply,
+            reply_to=message_id,
+            file=media
+        )
+        await event.delete()
+
+
+@admin_cmd("save",is_args="simple")
+async def on_snip_save(event):
+    name = event.pattern_match.group(1)
+    msg = await event.get_reply_message()
+    if msg:
+        snip = {'type': TYPE_TEXT, 'text': msg.message or ''}
+        if msg.media:
+            media = None
+            if isinstance(msg.media, types.MessageMediaPhoto):
+                media = utils.get_input_photo(msg.media.photo)
+                snip['type'] = TYPE_PHOTO
+            elif isinstance(msg.media, types.MessageMediaDocument):
+                media = utils.get_input_document(msg.media.document)
+                snip['type'] = TYPE_DOCUMENT
+            if media:
+                snip['id'] = media.id
+                snip['hash'] = media.access_hash
+                snip['fr'] = media.file_reference
+        add_snip(name, snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr'))
+        await event.reply("Note {name} saved successfully. Get it with #{name}".format(name=name))
+    else:
+        await event.reply("Reply to a message with `snips keyword` to save the snip")
+
+
+@admin_cmd("notes", is_args=False)
+async def on_snip_list(event):
+    all_snips = get_all_snips()
+    OUT_STR = "Notes Available in Current Chat:\n"
+    if len(all_snips) > 0:
+        for a_snip in all_snips:
+            OUT_STR += f" - `#{a_snip.snip}` \n"
+    else:
+        OUT_STR = "No Notes Found in This Chat"
+    if len(OUT_STR) > 4096:
+        with io.BytesIO(str.encode(OUT_STR)) as out_file:
+            out_file.name = "snips.text"
+            await borg.send_file(
+                event.chat_id,
+                out_file,
+                force_document=True,
+                allow_cache=False,
+                caption="Available Snips",
+                reply_to=event
+            )
+            await event.delete()
+    else:
+        await event.reply(OUT_STR)
+
+
+@admin_cmd("clear", is_args="notes1")
+async def on_snip_delete(event):
+    name = event.pattern_match.group(1)
+    remove_snip(name)
+    await event.reply("Note `#{}` deleted successfully".format(name))
+	
 print("Admin Bot Started !!")
 
 
