@@ -732,7 +732,7 @@ async def on_snip_save(event):
                 snip['id'] = media.id
                 snip['hash'] = media.access_hash
                 snip['fr'] = media.file_reference
-        add_snip(name, event.chat_id , snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr'))
+        add_snip(event.chat_id ,name , snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr'))
         await event.reply("Note {name} saved successfully. Get it with #{name}".format(name=name))
     else:
         await event.reply("Reply to a message with `/savenote ` to save the Note!!")
