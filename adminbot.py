@@ -714,7 +714,7 @@ async def on_snip(event):
         await event.delete()
 
 
-@admin_cmd("save",is_args="simple")
+@admin_cmd("savenote",is_args="simple")
 async def on_snip_save(event):
     name = event.pattern_match.group(1)
     msg = await event.get_reply_message()
@@ -732,10 +732,10 @@ async def on_snip_save(event):
                 snip['id'] = media.id
                 snip['hash'] = media.access_hash
                 snip['fr'] = media.file_reference
-        add_snip(name, snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr'), event.chat_id)
+        add_snip(name, event.chat_id , snip['text'], snip['type'], snip.get('id'), snip.get('hash'), snip.get('fr'))
         await event.reply("Note {name} saved successfully. Get it with #{name}".format(name=name))
     else:
-        await event.reply("Reply to a message with `snips keyword` to save the snip")
+        await event.reply("Reply to a message with `/savenote ` to save the Note!!")
 
 
 @admin_cmd("notes", is_args=False)
