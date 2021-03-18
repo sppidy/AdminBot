@@ -683,10 +683,10 @@ async def on_all_snip_delete(event):
     remove_all_filters(event.chat_id)
     await event.reply(f"Filters **in current chat** deleted successfully")
 
-@adminbot.on(events.NewMessage(pattern=r"#(\S+)"))
+@adminbot.on(events.NewMessage(pattern=r"\#(\S+)"))
 async def on_snip(event):
     name = event.pattern_match.group(1)
-    snip = get_snips(name,event.chat_id)
+    snip = get_snips(event.chat_id, name)
     if snip:
         if snip.snip_type == TYPE_PHOTO:
             media = types.InputPhoto(
