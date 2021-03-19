@@ -173,6 +173,7 @@ async def _(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@can_restrict
 async def ban(event):
     chat = await event.get_chat()
     chat.admin_rights
@@ -203,6 +204,7 @@ async def ban(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@can_restrict
 async def nothanos(event):
     chat = await event.get_chat()
     chat.admin_rights
@@ -321,6 +323,7 @@ async def pin(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@can_restrict
 async def kick(event):
     chat = await event.get_chat()
     chat.admin_rights
@@ -352,6 +355,7 @@ async def kick(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@can_restrict
 async def mute(event):
     chat = await event.get_chat()
     chat.admin_rights
@@ -383,6 +387,7 @@ async def mute(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@can_restrict
 async def mute(event):
     chat = await event.get_chat()
     chat.admin_rights
