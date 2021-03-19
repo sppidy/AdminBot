@@ -78,7 +78,7 @@ async def _(event):
 @callback("helpstarter")
 async def _(event):
     await event.edit(
-	    "Hey there! I am Administrator.\nI help admins manage their groups with Pro Features!\nHave a look at the following for an idea of some of the things I can help you with.\n\nMain commands available:\n • /help: PM's you this message.\n\nAll commands can either be used with / or !.\nAnd You May Check The Help for Plugins :"
+	    "Hey there! I am Administrator.\nI help admins manage their groups with Pro Features!\nHave a look at the following for an idea of some of the things I can help you with.\n\nAll commands can either be used with / or !.\nAnd You May Check The Help for Plugins :"
 	    ,buttons=[
 		    [
 			    Button.inline("Admin Tools", data="adminhelp"),
