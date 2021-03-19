@@ -19,6 +19,7 @@ from bot.sql.notessql import (
 	add_snip,
 	remove_snip,
 	get_all_snips,
+	remove_all_snip,
 )
 import logging
 from logging import DEBUG, INFO, basicConfig, getLogger
@@ -742,6 +743,7 @@ async def on_snip_delete(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@chat_creator
 async def on_all_snip_delete(event):
     remove_all_filters(event.chat_id)
     await event.reply(f"Filters **in current chat** deleted successfully")
@@ -817,7 +819,7 @@ async def on_snip_list(event):
                 out_file,
                 force_document=True,
                 allow_cache=False,
-                caption="Available Snips",
+                caption="Available Notes in This Chat",
                 reply_to=event
             )
             await event.delete()
@@ -830,6 +832,16 @@ async def on_snip_delete(event):
     name = event.pattern_match.group(1)
     remove_snip(event.chat_id,name)
     await event.reply("Note `#{}` deleted successfully".format(name))
+
+@admin_cmd("clearallnotes",is_args=False)
+@only_groups
+@is_bot_admin
+@is_admin
+@chat_creator
+async def on_all_snip_delete(event):
+    remove_all_snip(event.chat_id)
+    await event.reply(f"Notes **in current chat** deleted successfully")
+
 
 #======================================================================================
 print("Admin Bot Started !!")
