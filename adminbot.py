@@ -227,6 +227,7 @@ async def nothanos(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@can_promote
 async def promote(event):
     chat = await event.get_chat()
     chat.admin_rights
@@ -264,6 +265,7 @@ async def promote(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@can_promote
 async def demote(event):
     chat = await event.get_chat()
     chat.admin_rights
@@ -298,6 +300,7 @@ async def demote(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@can_pin
 async def pin(event):
     await event.get_chat()
     to_pin = event.reply_to_msg_id
