@@ -1,29 +1,3 @@
-"""
-**✘ Help ✘**
-
-• `/promote <reply to user/userid/username>`
-    **Promote the user in the chat.**
-
-• `/demote <reply to user/userid/username>`
-    **Demote the user in the chat.**
-
-• `/ban <reply to user/userid/username> <reason>`
-    **Ban the user from the chat.**
-
-• `/unban <reply to user/userid/username> <reason>`
-    **Unban the user from the chat.**
-
-• `/kick <reply to user/userid/username> <reason>`
-    **Kick the user from the chat.**
-
-• `/pin <reply to message>`
-    **Pin the message in the chat**
-    **For Loud pin use (`/pin loud`).**
-    
-• `/purge <reply to message>`
-    **Purge all messages from the replied message.**
-
-"""
 from bot import *
 admin_cmd = cmd
 from telethon import events
@@ -99,7 +73,7 @@ basicConfig(format="%(name)s - %(message)s", level=INFO)
 
 @callback("backer")
 async def _(event):
-	await event.edit("Hi There, I am a Simple Bot With All Admin Commands",buttons=[Button.inline("Hᴇʟᴘ", data="helpstarter")])
+	await event.edit("Hi There, I am a Simple Bot With All Admin Commands",buttons=[Button.inline("Help", data="helpstarter")])
 
 @callback("helpstarter")
 async def _(event):
@@ -109,6 +83,7 @@ async def _(event):
 		    [
 			    Button.inline("Admin Tools", data="adminhelp"),
 			    Button.inline("Filters" , data="filterhelp"),
+			    Button.inline("Notes" , data="noteshelp"),
 		    ],
 		    [
 			    Button.inline("<-- Back" , data="backer")
@@ -118,11 +93,70 @@ async def _(event):
 
 @callback("adminhelp")
 async def _(event):
-    await event.edit(f"{__doc__}",buttons=[Button.inline(" <-- Bᴀᴄᴋ", data="helpstarter")])
+    await event.edit(f"{adminhelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
 
 @callback("filterhelp")
 async def _(event):
-    await event.edit(f"Ahh Next Commit",buttons=[Button.inline(" <-- Bᴀᴄᴋ", data="helpstarter")])
+    await event.edit(f"{filterrhelp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
+
+@callback("noteshelp")
+async def _(event):
+    await event.edit(f"{notesshelp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
+
+filterrhelp = """
+Here is the help for the Filters module:
+
+ • /filters: List all active filters saved in the chat.
+
+Admin only:
+ • /savefilter <keyword> <reply message>: Add a filter to this chat. The bot will now reply that message whenever 'keyword'is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker. NOTE: all filter keywords are in lowercase.
+
+ • /stop <filter keyword>: Stop that filter.
+
+Chat creator only:
+ • /removeallfilters: Remove all chat filters at once.
+"""
+
+adminhelpp = """
+**Here is the help for the  Admin Module**
+
+• `/promote <reply to user/userid/username>`
+    **Promote the user in the chat.**
+
+• `/demote <reply to user/userid/username>`
+    **Demote the user in the chat.**
+
+• `/ban <reply to user/userid/username> <reason>`
+    **Ban the user from the chat.**
+
+• `/unban <reply to user/userid/username> <reason>`
+    **Unban the user from the chat.**
+
+• `/kick <reply to user/userid/username> <reason>`
+    **Kick the user from the chat.**
+
+• `/pin <reply to message>`
+    **Pin the message in the chat**
+    **For Loud pin use (`/pin loud`).**
+    
+• `/purge <reply to message>`
+    **Purge all messages from the replied message.**
+
+• `/del <reply to message>`
+    **Deletes The Replied Message.**
+"""
+notesshelp = """
+Here is the help for the Notes module:
+
+ • #<notename>: same as /get
+ • /notes : list all saved notes in this chat
+ 
+Admins only:
+ • /save <notename> <reply message> :  save the replied message as a note with name notename
+ • /clear <notename>: clear note with this name
+ • /removeallnotes: removes all notes from the group
+ Note: Note names are case-insensitive, and they are automatically converted to lowercase before getting saved.
+ """
 #==========================================================================
 
 @admin_cmd("start", is_args="simple")
@@ -131,9 +165,10 @@ async def _(event):
 	    botun = (await adminbot.get_me()).username
 	    return await event.reply("Hi There, I am a Simple Bot With All Admin Commands To know More PM Me",buttons=[Button.url("Start Me In PM", url=f"https://t.me/{botun}?start")])
 	elif not event.is_group:
-		return await event.reply("Hi There, I am a Simple Bot With All Admin Commands",buttons=[Button.inline("Hᴇʟᴘ", data="helpstarter")])
+		return await event.reply("Hi There, I am a Simple Bot With All Admin Commands",buttons=[Button.inline("Help", data="helpstarter")])
 
 #==========================================================================
+# Admin Module
 @admin_cmd("ban", is_args=True)
 @only_groups
 @is_bot_admin
@@ -474,7 +509,8 @@ async def get_user_sender_id(user, event):
         return None
 
     return user_obj
-
+###########====================================================================================================
+#Welcome
 @adminbot.on(events.ChatAction())
 async def _(event):
     cws = get_current_welcome_settings(event.chat_id)
@@ -573,7 +609,8 @@ async def _(event):
         )
     else:
         await event.reply("No Welcome Message found")
-
+#===================================================================================================
+#Global
 DELETE_TIMEOUT = 0
 TYPE_TEXT = 0
 TYPE_PHOTO = 1
@@ -582,8 +619,8 @@ TYPE_DOCUMENT = 2
 
 global last_triggered_filters
 last_triggered_filters = {}  # pylint:disable=E0602
-
-
+# ===================================================================================================
+#Filters
 @adminbot.on(events.NewMessage(incoming=True))
 async def on_snip(event):
     global last_triggered_filters
@@ -664,7 +701,7 @@ async def on_snip_list(event):
     OUT_STR = "Available Filters in the Current Chat:\n"
     if len(all_snips) > 0:
         for a_snip in all_snips:
-            OUT_STR += f"👉 {a_snip.keyword} \n"
+            OUT_STR += f" - {a_snip.keyword} \n"
     else:
         OUT_STR = "No Filters in Current Chat"
     if len(OUT_STR) > 4096:
@@ -683,7 +720,7 @@ async def on_snip_list(event):
         await event.reply(OUT_STR)
 
 
-@admin_cmd("clearfilter",is_args=True)
+@admin_cmd("stop",is_args=True)
 @only_groups
 @is_bot_admin
 @is_admin
@@ -700,7 +737,8 @@ async def on_snip_delete(event):
 async def on_all_snip_delete(event):
     remove_all_filters(event.chat_id)
     await event.reply(f"Filters **in current chat** deleted successfully")
-
+#====================================================================================================
+#Notes
 @adminbot.on(events.NewMessage(pattern=r"\#(\S+)"))
 async def on_snip(event):
     name = event.pattern_match.group(1)
@@ -729,8 +767,6 @@ async def on_snip(event):
             reply_to=message_id,
             file=media
         )
-        await event.delete()
-
 
 @admin_cmd("savenote",is_args="simple")
 async def on_snip_save(event):
@@ -784,9 +820,10 @@ async def on_snip_list(event):
 @admin_cmd("clear", is_args="notes1")
 async def on_snip_delete(event):
     name = event.pattern_match.group(1)
-    remove_snip(name,event.chat_id)
+    remove_snip(event.chat_id,name)
     await event.reply("Note `#{}` deleted successfully".format(name))
-	
+
+#======================================================================================
 print("Admin Bot Started !!")
 
 
