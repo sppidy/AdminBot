@@ -22,7 +22,7 @@ from bot.sql.notessql import (
 	remove_all_snip,
 )
 import logging
-from logging import DEBUG, INFO, basicConfig, getLogger
+from logging import DEBUG, INFO, basicConfig, getLogger,WARNING
 
 # =================== CONSTANT ===================
 PP_TOO_SMOL = "`The image is too small`"
@@ -68,7 +68,7 @@ MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
 adminbot = adminbot
 UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
 
-basicConfig(format="%(name)s - %(message)s", level=DEBUG)
+basicConfig(format="%(name)s - %(message)s", level=WARNING)
 #==========================================================================
 # For PMs Of bot
 
@@ -530,7 +530,7 @@ async def delete_msg(event):
 @is_admin
 @can_pin
 async def _(event):
-    xx = await event.edit("Pls Wait....")
+    xx = await event.reply("Pls Wait....")
     ch = (event.pattern_match.group(1)).strip()
     msg = event.reply_to_msg_id
     if msg and not ch:
