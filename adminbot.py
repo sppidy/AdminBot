@@ -79,7 +79,7 @@ async def _(event):
 @callback("helpstarter")
 async def _(event):
     await event.edit(
-	    "Hey there! I am Administrator.\nI help admins manage their groups with Pro Features!\nHave a look at the following for an idea of some of the things I can help you with.\n\nAll commands can either be used with / or !.\nAnd You May Check The Help for Plugins :"
+	    "Hey there! I am Administrator.\nI help admins manage their groups with Pro Features!\nHave a look at the following for an idea of some of the things I can help you with.\n\nAll commands can either be used with /.\nAnd You May Check The Help for Plugins :"
 	    ,buttons=[
 		    [
 			    Button.inline("Bans", data="banhelp"),
@@ -168,40 +168,40 @@ promotehelpp = """
 banhelpp = """
 **Here is the help for the Bans Module**
 
-• `/ban <reply to user/userid/username> <reason>`
+• /ban `<reply to user/userid/username> <reason>`
     **Ban the user from the chat.**
 
-• `/unban <reply to user/userid/username> <reason>`
+• /unban `<reply to user/userid/username> <reason>`
     **Unban the user from the chat.**
 """
 
 kickhelpp = """
 **Here is the help for the Kick Module**
 
-• `/kick <reply to user/userid/username> <reason>`
+• /kick `<reply to user/userid/username> <reason>`
     **Kick the user from the chat.**
 """
 
 pinhelpp = """
 **Here is the help for the Pin/Unpin Module**
 
-• `/pin <reply to message>`
+• /pin `<reply to message>`
     **Pin the message in the chat**
     **For Loud pin use (`/pin loud`).**
 """
 purgehelpp = """
 **Here is the help for the Purge Module**
 
-• `/purge <reply to message>`
+• /purge `<reply to message>`
     **Purge all messages from the replied message.**
 
-• `/del <reply to message>`
+• /del `<reply to message>`
     **Deletes The Replied Message.**
 """
 notesshelp = """
 Here is the help for the Notes module:
 
- • #<notename>: same as /get
+ • `#<notename>`: To Get The Note
  • /notes : list all saved notes in this chat
  
 Admins only:
