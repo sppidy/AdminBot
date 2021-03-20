@@ -68,7 +68,7 @@ MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
 adminbot = adminbot
 UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
 
-basicConfig(format="%(name)s - %(message)s", level=INFO)
+basicConfig(format="%(name)s - %(message)s", level=DEBUG)
 #==========================================================================
 # For PMs Of bot
 
