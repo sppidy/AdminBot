@@ -514,7 +514,6 @@ async def purge(event):
 @is_bot_admin
 @is_admin
 async def delete_msg(event):
-
     chat = event.chat_id
     msg = await event.get_reply_message()
     if not msg:
@@ -524,6 +523,35 @@ async def delete_msg(event):
     chat = await event.get_input_chat()
     rm = [msg, to_delete]
     await adminbot.delete_messages(chat, rm)
+
+@admin_cmd("unpin", is_args="unpin")
+@only_groups
+@is_bot_admin
+@is_admin
+@can_pin
+async def _(event):
+    xx = await event.edit("Pls Wait....")
+    ch = (event.pattern_match.group(1)).strip()
+    msg = event.reply_to_msg_id
+    if msg and not ch:
+        try:
+            await adminbot.unpin_message(event.chat_id, msg)
+        except BadRequestError:
+            return await xx.edit("Insufficient Permissions")
+        except Exception as e:
+            return await xx.edit(f"**ERROR:**\n`{str(e)}`")
+    elif ch == "all":
+        try:
+            await adminbot.unpin_message(event.chat_id)
+        except BadRequestError:
+            return await xx.edit("Insufficient Permissions")
+        except Exception as e:
+            return await xx.edit(f"**ERROR:**`{str(e)}`")
+    else:
+        return await xx.edit(f"Either reply to a message, or, use `/unpin all`")
+    if not msg and ch != "all":
+        return await xx.edit(f"Either reply to a message, or, use `/unpin all`")
+    await xx.edit("`Unpinned!`")
 
 async def get_user_from_event(event):
     """ Get the user from argument or replied message. """
@@ -586,7 +614,7 @@ async def _(event):
         if event.user_joined:
             if cws.should_clean_welcome:
                 try:
-                    await jarvis.delete_messages(  # pylint:disable=E0602
+                    await adminbot.delete_messages(  # pylint:disable=E0602
                         event.chat_id, cws.previous_welcome
                     )
                 except Exception as e:  # pylint:disable=C0103,W0703
