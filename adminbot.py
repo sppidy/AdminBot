@@ -530,28 +530,27 @@ async def delete_msg(event):
 @is_admin
 @can_pin
 async def _(event):
-    xx = await event.reply("UnPinned")
     ch = (event.pattern_match.group(1)).strip()
     msg = event.reply_to_msg_id
     if msg and not ch:
         try:
             await adminbot.unpin_message(event.chat_id, msg)
         except BadRequestError:
-            return await xx.edit("Insufficient Permissions")
+            return await event.reply("Insufficient Permissions")
         except Exception as e:
-            return await xx.edit(f"**ERROR:**\n`{str(e)}`")
+            return await event.reply(f"**ERROR:**\n`{str(e)}`")
     elif ch == "all":
         try:
             await adminbot.unpin_message(event.chat_id)
         except BadRequestError:
-            return await xx.edit("Insufficient Permissions")
+            return await event.reply("Insufficient Permissions")
         except Exception as e:
-            return await xx.edit(f"**ERROR:**`{str(e)}`")
+            return await event.reply(f"**ERROR:**`{str(e)}`")
     else:
-        return await xx.edit(f"Either reply to a message, or, use `/unpin all`")
+        return await event.reply(f"Either reply to a message, or, use `/unpin all`")
     if not msg and ch != "all":
-        return await xx.edit(f"Either reply to a message, or, use `/unpin all`")
-    await xx.edit("`Unpinned!`")
+        return await event.reply(f"Either reply to a message, or, use `/unpin all`")
+    await event.reply("`Unpinned!`")
 
 async def get_user_from_event(event):
     """ Get the user from argument or replied message. """
