@@ -188,6 +188,11 @@ pinhelpp = """
 • /pin `<reply to message>`
     **Pin the message in the chat**
     **For Loud pin use (`/pin loud`).**
+
+• /unpin `<reply to message>`
+    **Unpin the message in the chat**
+    **For Unpinning All Messages Use (`/unpin all`).**
+
 """
 purgehelpp = """
 **Here is the help for the Purge Module**
@@ -207,7 +212,10 @@ Here is the help for the Notes module:
 Admins only:
  • /save <notename> <reply message> :  save the replied message as a note with name notename
  • /clear <notename>: clear note with this name
+ 
+ Chat Creator Only:
  • /removeallnotes: removes all notes from the group
+ 
  Note: Note names are case-insensitive, and they are automatically converted to lowercase before getting saved.
  """
 #==========================================================================
@@ -216,9 +224,21 @@ Admins only:
 async def _(event):
 	if event.is_group:
 	    botun = (await adminbot.get_me()).username
-	    return await event.reply("Hi There, I am a Simple Bot With All Admin Commands To know More PM Me",buttons=[Button.url("Start Me In PM", url=f"https://t.me/{botun}?start")])
+	    return await event.reply("Hi There, I am Adminstrator\nTo know More PM Me",buttons=[Button.url("Start Me In PM", url=f"https://t.me/{botun}?start")])
 	elif not event.is_group:
-		return await event.reply("Hi There, I am a Simple Bot With All Admin Commands",buttons=[Button.inline("Help", data="helpstarter")])
+		return await event.reply(
+			"Hi There, I am Adminstrator,\nI Help Admins To Mange Their Chats Easily\n\n - This Bot is Purely Made in Telethon",
+			buttons=[
+				[
+					Button.inline("Help", data="helpstarter"),
+			        ],
+			        [
+					Button.url("Updates Channel", url="https://t.me/ProBotz"),
+					Button.url("Support Group", url="https://t.me/ProBotzSupport"),
+				],
+			],
+		)
+				
 
 #==========================================================================
 # Admin Module
