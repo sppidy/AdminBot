@@ -530,7 +530,7 @@ async def delete_msg(event):
 @is_admin
 @can_pin
 async def _(event):
-    xx = await event.reply("Pls Wait....")
+    xx = await event.reply("UnPinned")
     ch = (event.pattern_match.group(1)).strip()
     msg = event.reply_to_msg_id
     if msg and not ch:
