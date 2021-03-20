@@ -74,7 +74,18 @@ basicConfig(format="%(name)s - %(message)s", level=WARNING)
 
 @callback("backer")
 async def _(event):
-	await event.edit("Hi There, I am a Simple Bot With All Admin Commands",buttons=[Button.inline("Help", data="helpstarter")])
+	await event.reply(
+		"Hi There, I am Adminstrator,\nI Help Admins To Mange Their Chats Easily\n\n - This Bot is Purely Made in Telethon",
+		buttons=[
+			[
+				Button.inline("Help", data="helpstarter"),
+			],
+			[
+	              		Button.url("Updates Channel", url="https://t.me/ProBotz"),
+			        Button.url("Support Group", url="https://t.me/ProBotzSupport"),
+			],
+		],
+	)
 
 @callback("helpstarter")
 async def _(event):
