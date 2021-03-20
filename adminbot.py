@@ -74,7 +74,7 @@ basicConfig(format="%(name)s - %(message)s", level=WARNING)
 
 @callback("backer")
 async def _(event):
-	await event.reply(
+	await event.edit(
 		"Hi There, I am Adminstrator,\nI Help Admins To Mange Their Chats Easily\n\n - This Bot is Purely Made in Telethon",
 		buttons=[
 			[
