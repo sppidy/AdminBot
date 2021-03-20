@@ -82,9 +82,18 @@ async def _(event):
 	    "Hey there! I am Administrator.\nI help admins manage their groups with Pro Features!\nHave a look at the following for an idea of some of the things I can help you with.\n\nAll commands can either be used with / or !.\nAnd You May Check The Help for Plugins :"
 	    ,buttons=[
 		    [
-			    Button.inline("Admin Tools", data="adminhelp"),
+			    Button.inline("Bans", data="banhelp"),
+			    Button.inline("Promote" , data="promotehelp"),
+			    Button.inline("Kick" , data="kickhelp"),
+		    ],
+		    [
+			    Button.inline("Pin/Unpin", data="pinhelp"),
+			    Button.inline("Purge" , data="purgehelp"),
 			    Button.inline("Filters" , data="filterhelp"),
-			    Button.inline("Notes" , data="noteshelp"),
+		    ],
+		    [
+			    Button.inline("Notes", data="noteshelp"),
+			    Button.inline("Welcome" , data="welcomehelp"),
 		    ],
 		    [
 			    Button.inline("<-- Back" , data="backer")
@@ -92,9 +101,25 @@ async def _(event):
 	    ],
     )
 
-@callback("adminhelp")
+@callback("banhelp")
 async def _(event):
-    await event.edit(f"{adminhelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
+    await event.edit(f"{banhelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
+
+@callback("promotehelp")
+async def _(event):
+    await event.edit(f"{promotehelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
+
+@callback("kickhelp")
+async def _(event):
+    await event.edit(f"{kickhelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
+
+@callback("pinhelp")
+async def _(event):
+    await event.edit(f"{pinhelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
+
+@callback("purgehelp")
+async def _(event):
+    await event.edit(f"{purgehelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
 
 @callback("filterhelp")
 async def _(event):
@@ -103,6 +128,18 @@ async def _(event):
 @callback("noteshelp")
 async def _(event):
     await event.edit(f"{notesshelp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
+
+@callback("welcomehelp")
+async def _(event):
+    await event.edit(f"{welcomehelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
+
+welcomehelpp = """
+
+Admin commands:
+ - /savewelcome <text>: Set a new welcome message. Supports markdown and fillings.
+ - /welcome : See Your Current Welcome Message
+ - /clearwelcome : Clears Your Current Welcome Message
+"""
 
 filterrhelp = """
 Here is the help for the Filters module:
@@ -118,28 +155,43 @@ Chat creator only:
  • /removeallfilters: Remove all chat filters at once.
 """
 
-adminhelpp = """
-**Here is the help for the  Admin Module**
+promotehelpp = """
+**Here is the help for the Promote Module**
 
-• `/promote <reply to user/userid/username>`
+• /promote `<reply to user/userid/username>`
     **Promote the user in the chat.**
 
-• `/demote <reply to user/userid/username>`
+• /demote `<reply to user/userid/username>`
     **Demote the user in the chat.**
+"""
+
+banhelpp = """
+**Here is the help for the Bans Module**
 
 • `/ban <reply to user/userid/username> <reason>`
     **Ban the user from the chat.**
 
 • `/unban <reply to user/userid/username> <reason>`
     **Unban the user from the chat.**
+"""
+
+kickhelpp = """
+**Here is the help for the Kick Module**
 
 • `/kick <reply to user/userid/username> <reason>`
     **Kick the user from the chat.**
+"""
+
+pinhelpp = """
+**Here is the help for the Pin/Unpin Module**
 
 • `/pin <reply to message>`
     **Pin the message in the chat**
     **For Loud pin use (`/pin loud`).**
-    
+"""
+purgehelpp = """
+**Here is the help for the Purge Module**
+
 • `/purge <reply to message>`
     **Purge all messages from the replied message.**
 
@@ -415,6 +467,7 @@ async def mute(event):
         await event.reply(f"`Unmute` [{user.first_name}](tg://user?id={user.id})`!`")
 
 @admin_cmd("purge")
+@can_delete
 @only_groups
 @is_bot_admin
 @is_admin
@@ -456,6 +509,7 @@ async def purge(event):
 
 
 @admin_cmd("del", is_args=False)
+@can_delete
 @only_groups
 @is_bot_admin
 @is_admin
@@ -574,6 +628,7 @@ async def _(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@change_info
 async def _(event):
     if event.fwd_from:
         return
@@ -592,6 +647,7 @@ async def _(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@change_info
 async def _(event):
     if event.fwd_from:
         return
@@ -671,6 +727,7 @@ async def on_snip(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@change_info
 async def on_snip_save(event):
     name = event.pattern_match.group(1)
     msg = await event.get_reply_message()
@@ -733,6 +790,7 @@ async def on_snip_list(event):
 @only_groups
 @is_bot_admin
 @is_admin
+@change_info
 async def on_snip_delete(event):
     name = event.pattern_match.group(1)
     remove_filter(event.chat_id, name)
@@ -779,6 +837,10 @@ async def on_snip(event):
         )
 
 @admin_cmd("savenote",is_args="simple")
+@only_groups
+@is_bot_admin
+@is_admin
+@change_info
 async def on_snip_save(event):
     name = event.pattern_match.group(1)
     msg = await event.get_reply_message()
@@ -803,6 +865,8 @@ async def on_snip_save(event):
 
 
 @admin_cmd("notes", is_args=False)
+@only_groups
+@is_bot_admin
 async def on_snip_list(event):
     all_snips = get_all_snips(event.chat_id)
     OUT_STR = "Notes Available in Current Chat:\n"
@@ -828,6 +892,10 @@ async def on_snip_list(event):
 
 
 @admin_cmd("clear", is_args="notes1")
+@only_groups
+@is_bot_admin
+@is_admin
+@change_info
 async def on_snip_delete(event):
     name = event.pattern_match.group(1)
     remove_snip(event.chat_id,name)
