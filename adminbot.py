@@ -104,6 +104,7 @@ async def _(event):
 			    Button.inline("Filters" , data="filterhelp"),
 		    ],
 		    [
+			    Button.inline("Locks", data="lockhelp"),
 			    Button.inline("Notes", data="noteshelp"),
 			    Button.inline("Welcome" , data="welcomehelp"),
 		    ],
@@ -132,6 +133,10 @@ async def _(event):
 @callback("purgehelp")
 async def _(event):
     await event.edit(f"{purgehelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
+
+@callback("lockhelp")
+async def _(event):
+    await event.edit(f"{lockhelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
 
 @callback("filterhelp")
 async def _(event):
@@ -232,18 +237,31 @@ Admins only:
  """
 lockktypes = """
 Available message types to lock/unlock are: 
-- all 
-- msg 
-- media
-- sticker
-- gif
-- game
-- inline
-- poll
-- invite
-- pin
-- info
+- `all` 
+- `msg` 
+- `media`
+- `sticker`
+- `gif`
+- `game`
+- `inline`
+- `poll`
+- `invite`
+- `pin`
+- `info`
 """
+
+lockhelpp = """Here is The Help For Notes Module 
+
+Do stickers annoy you? or want to avoid people sharing links? or pictures? You're in the right place!
+
+The locks module allows you to lock away some common items in the telegram world; the bot will automatically delete them!
+
+Admin commands:
+- /lock <item(s)>: Lock one or more items. Now, only admins can use this type!
+- /unlock <item(s)>: Unlock one or more items. Everyone can use this type again!
+- /locks: List currently locked items.
+- /lockwarns <yes/no/on/off>: Enabled or disable whether a user should be warned when using a locked item.
+- /locktypes: Show the list of all lockable items."""
 #==========================================================================
 
 @admin_cmd("start", is_args="simple")
@@ -831,7 +849,9 @@ async def rem_locks(event):
         await event.reply(f"**Error Occured:\n** {str(e)}")
         return
 
-
+@admin_cmd("locktypes", is_args=False)
+async def locktypes(event):
+    await event.reply(lockktypes)
 #==============================================================================================================
 #Welcome
 @adminbot.on(events.ChatAction())
