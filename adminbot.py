@@ -733,9 +733,9 @@ async def locks(event):
         await event.client(
             EditChatDefaultBannedRightsRequest(peer=peer_id, banned_rights=lock_rights)
         )
-        await event.reply(f"{DEFAULTUSER} `Locked {what} !`")
+        await event.reply(f"`Locked {what} !`")
     except BaseException as e:
-        await event.reply(f"`Do I have proper rights for that ??`\n**Error:** {str(e)}")
+        await event.reply(f"**Error Occured:** {str(e)}")
         return
 
 
