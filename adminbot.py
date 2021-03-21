@@ -257,10 +257,8 @@ Do stickers annoy you? or want to avoid people sharing links? or pictures? You'r
 The locks module allows you to lock away some common items in the telegram world; the bot will automatically delete them!
 
 Admin commands:
-- /lock <item(s)>: Lock one or more items. Now, only admins can use this type!
-- /unlock <item(s)>: Unlock one or more items. Everyone can use this type again!
-- /locks: List currently locked items.
-- /lockwarns <yes/no/on/off>: Enabled or disable whether a user should be warned when using a locked item.
+- /lock <item>: Lock one or more items. Now, only admins can use this type!
+- /unlock <item>: Unlock one or more items. Everyone can use this type again!
 - /locktypes: Show the list of all lockable items."""
 #==========================================================================
 
