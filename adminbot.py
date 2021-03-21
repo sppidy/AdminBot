@@ -716,7 +716,7 @@ async def locks(event):
             await event.reply(f"Invalid lock type: `{input_str}` .\nSee /locktypes for more info")
             return
 
-    lock_rights = ChatBannedRights(
+    lock_rights = types.ChatBannedRights(
         until_date=None,
         send_messages=msg,
         send_media=media,
@@ -807,7 +807,7 @@ async def rem_locks(event):
             await event.reply(f"Invalid lock type: `{input_str}` .\nSee /locktypes for more info")
             return
 
-    unlock_rights = ChatBannedRights(
+    unlock_rights = types.ChatBannedRights(
         until_date=None,
         send_messages=msg,
         send_media=media,
