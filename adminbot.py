@@ -1,6 +1,6 @@
 from bot import *
 admin_cmd = cmd
-from telethon import events
+from telethon import events, functions, types
 from telethon.utils import pack_bot_file_id
 from bot.sql.welcomesql  import (
     add_welcome_setting,
