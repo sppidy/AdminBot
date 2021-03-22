@@ -1,5 +1,4 @@
 from bot import *
-admin_cmd = cmd
 from telethon import events, functions, types
 from telethon.utils import pack_bot_file_id
 from bot.sql.welcomesql  import (
@@ -33,7 +32,6 @@ NO_PERM = (
     "`I don't have sufficient permissions! This is so sed. Alexa play Tera Baap Aaya`"
 )
 NO_SQL = "`Almost Done! Wait...`"
-
 CHAT_PP_CHANGED = "`Chat Picture Changed`"
 CHAT_PP_ERROR = (
     "`Some issue with updating the pic,`"
@@ -41,7 +39,6 @@ CHAT_PP_ERROR = (
     "`or don't have enough rights.`"
 )
 INVALID_MEDIA = "`Invalid Extension`"
-
 BANNED_RIGHTS = ChatBannedRights(
     until_date=None,
     view_messages=True,
@@ -53,7 +50,6 @@ BANNED_RIGHTS = ChatBannedRights(
     send_inline=True,
     embed_links=True,
 )
-
 UNBAN_RIGHTS = ChatBannedRights(
     until_date=None,
     send_messages=None,
@@ -64,17 +60,15 @@ UNBAN_RIGHTS = ChatBannedRights(
     send_inline=None,
     embed_links=None,
 )
-
 MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
-adminbot = adminbot
 UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
-
 basicConfig(format="%(name)s - %(message)s", level=WARNING)
 #==========================================================================
-# For PMs Of bot
+# For Inlines Of bot
 
 @callback("backer")
 async def _(event):
+	botun = (await adminbot.get_me()).username
 	await event.edit(
 		"Hi There, I am Adminstrator,\nI Help Admins To Manage Their Chats Easily\n\n - This Bot is Purely Made in Telethon",
 		buttons=[
@@ -84,6 +78,9 @@ async def _(event):
 			[
 	              		Button.url("Updates Channel", url="https://t.me/ProBotz"),
 			        Button.url("Support Group", url="https://t.me/ProBotzSupport"),
+			],
+			[      
+				Button.url("Add To Group  👥", f"https://t.me/{botun}?startgroup=true"),
 			],
 		],
 	)
@@ -114,162 +111,19 @@ async def _(event):
 	    ],
     )
 
-@callback("banhelp")
-async def _(event):
-    await event.edit(f"{banhelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
-
-@callback("promotehelp")
-async def _(event):
-    await event.edit(f"{promotehelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
-
-@callback("kickhelp")
-async def _(event):
-    await event.edit(f"{kickhelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
-
-@callback("pinhelp")
-async def _(event):
-    await event.edit(f"{pinhelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
-
-@callback("purgehelp")
-async def _(event):
-    await event.edit(f"{purgehelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
-
-@callback("lockhelp")
-async def _(event):
-    await event.edit(f"{lockhelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
-
-@callback("filterhelp")
-async def _(event):
-    await event.edit(f"{filterrhelp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
-
-@callback("noteshelp")
-async def _(event):
-    await event.edit(f"{notesshelp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
-
-@callback("welcomehelp")
-async def _(event):
-    await event.edit(f"{welcomehelpp}",buttons=[Button.inline(" <-- Back", data="helpstarter")])
-
-welcomehelpp = """
-
-Admin commands:
- - /savewelcome <text>: Set a new welcome message. Supports markdown and fillings.
- - /welcome : See Your Current Welcome Message
- - /clearwelcome : Clears Your Current Welcome Message
-"""
-
-filterrhelp = """
-Here is the help for the Filters module:
-
- • /filters: List all active filters saved in the chat.
-
-Admin only:
- • /savefilter <keyword> <reply message>: Add a filter to this chat. The bot will now reply that message whenever 'keyword'is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker. NOTE: all filter keywords are in lowercase.
-
- • /stop <filter keyword>: Stop that filter.
-
-Chat creator only:
- • /removeallfilters: Remove all chat filters at once.
-"""
-
-promotehelpp = """
-**Here is the help for the Promote Module**
-
-• /promote `<reply to user/userid/username>`
-    **Promote the user in the chat.**
-
-• /demote `<reply to user/userid/username>`
-    **Demote the user in the chat.**
-"""
-
-banhelpp = """
-**Here is the help for the Bans Module**
-
-• /ban `<reply to user/userid/username> <reason>`
-    **Ban the user from the chat.**
-
-• /unban `<reply to user/userid/username> <reason>`
-    **Unban the user from the chat.**
-"""
-
-kickhelpp = """
-**Here is the help for the Kick Module**
-
-• /kick `<reply to user/userid/username> <reason>`
-    **Kick the user from the chat.**
-"""
-
-pinhelpp = """
-**Here is the help for the Pin/Unpin Module**
-
-• /pin `<reply to message>`
-    **Pin the message in the chat**
-    **For Loud pin use (`/pin loud`).**
-
-• /unpin `<reply to message>`
-    **Unpin the message in the chat**
-    **For Unpinning All Messages Use (`/unpin all`).**
-
-"""
-purgehelpp = """
-**Here is the help for the Purge Module**
-
-• /purge `<reply to message>`
-    **Purge all messages from the replied message.**
-
-• /del `<reply to message>`
-    **Deletes The Replied Message.**
-"""
-notesshelp = """
-Here is the help for the Notes module:
-
- • `#<notename>`: To Get The Note
- • /notes : list all saved notes in this chat
- 
-Admins only:
- • /save <notename> <reply message> :  save the replied message as a note with name notename
- • /clear <notename>: clear note with this name
- 
- Chat Creator Only:
- • /removeallnotes: removes all notes from the group
- 
- Note: Note names are case-insensitive, and they are automatically converted to lowercase before getting saved.
- """
-lockktypes = """
-Available message types to lock/unlock are: 
-- `all` 
-- `msg` 
-- `media`
-- `sticker`
-- `gif`
-- `game`
-- `inline`
-- `poll`
-- `invite`
-- `pin`
-- `info`
-"""
-
-lockhelpp = """Here is The Help For Notes Module 
-
-Do stickers annoy you? or want to avoid people sharing links? or pictures? You're in the right place!
-
-The locks module allows you to lock away some common items in the telegram world; the bot will automatically delete them!
-
-Admin commands:
-- /lock <item>: Lock one or more items. Now, only admins can use this type!
-- /unlock <item>: Unlock one or more items. Everyone can use this type again!
-- /locktypes: Show the list of all lockable items."""
-#==========================================================================
-
+#======================================================================================================
+# For Pms Of Bot
 @admin_cmd("start", is_args="simple")
 async def _(event):
 	if event.is_group:
 	    botun = (await adminbot.get_me()).username
-	    return await event.reply("Hi There, I am Adminstrator\nTo know More PM Me",buttons=[Button.url("Start Me In PM", url=f"https://t.me/{botun}?start")])
+	    botname = (await adminbot.get_me()).first_name
+	    return await event.reply(f"Hi There, I am {botname}\nTo know More PM Me",buttons=[Button.url("Start Me In PM", url=f"https://t.me/{botun}?start")])
 	elif not event.is_group:
+		botun = (await adminbot.get_me()).username
+		botname = (await adminbot.get_me()).first_name
 		return await event.reply(
-			"Hi There, I am Adminstrator,\nI Help Admins To Mange Their Chats Easily\n\n - This Bot is Purely Made in Telethon",
+			f"Hi There, I am {botname},\nI Help Admins To Mange Their Chats Easily\n\n - This Bot is Purely Made in Telethon",
 			buttons=[
 				[
 					Button.inline("Help", data="helpstarter"),
@@ -278,10 +132,12 @@ async def _(event):
 					Button.url("Updates Channel", url="https://t.me/ProBotz"),
 					Button.url("Support Group", url="https://t.me/ProBotzSupport"),
 				],
+				[      
+				        Button.url("Add To Group  👥", f"https://t.me/{botun}?startgroup=true"),
+			        ],
 			],
 		)
-				
-
+	
 #==========================================================================
 # Admin Module
 @admin_cmd("ban", is_args=True)
