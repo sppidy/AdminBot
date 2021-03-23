@@ -1211,7 +1211,7 @@ async def _(event):
         pass
 
 
-@callback("rmfed(\_(.*))")
+@adminbot.on(events.CallbackQuery(pattern=r"rmfed(\_(.*))"))
 async def delete_fed(event):
     # print("1")
     tata = event.pattern_match.group(1)
@@ -1233,7 +1233,6 @@ async def delete_fed(event):
                 ),
                 parse_mode="markdown",
             )
-
 
 @admin_cmd("renamefed", is_args="simple2")
 async def _(event):
