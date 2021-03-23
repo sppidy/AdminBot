@@ -1932,7 +1932,7 @@ async def _(event):
         pass
 
 
-@admin_cmd("frules",is_args=False)
+@admin_cmd("fedrules",is_args=False)
 async def _(event):
     chat = event.chat_id
     if event.is_group:
@@ -2641,7 +2641,7 @@ async def _(event):
         pass
 
 
-@admin_cmd(pattern="fbroadcast", is_args="simple")
+@admin_cmd("fbroadcast", is_args="simple")
 async def _(event):
     try:
         chat = event.chat_id
@@ -2691,7 +2691,7 @@ async def _(event):
         pass
 
 
-@admin_cmd(pattern="fednotif",is_args="simple")
+@admin_cmd("fednotif",is_args="simple")
 async def _(event):
     try:
         chat = event.chat_id
