@@ -64,6 +64,7 @@ UNBAN_RIGHTS = ChatBannedRights(
 MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
 UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
 basicConfig(format="%(name)s - %(message)s", level=WARNING)
+OWNER_ID = int(os.environ.get("OWNER_ID", None))
 #==========================================================================
 # For Inlines Of bot
 
