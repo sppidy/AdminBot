@@ -1932,7 +1932,7 @@ async def _(event):
         pass
 
 
-@admin_cmd(pattern="frules",is_args=False)
+@admin_cmd("frules",is_args=False)
 async def _(event):
     chat = event.chat_id
     if event.is_group:
