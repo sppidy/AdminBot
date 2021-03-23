@@ -1211,7 +1211,7 @@ async def _(event):
         pass
 
 
-@callback(r"rmfed(\_(.*))")
+@callback("rmfed(\_(.*))")
 async def delete_fed(event):
     # print("1")
     tata = event.pattern_match.group(1)
