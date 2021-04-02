@@ -21,6 +21,11 @@ from bot.sql.notessql import (
 	remove_all_snip,
 )
 import bot.sql.fedssql as sql
+import os
+from telethon import *
+from telethon.tl import *
+from typing import Optional
+import bot.sql.rulessql as sql
 import logging
 from logging import DEBUG, INFO, basicConfig, getLogger,WARNING
 from telethon.tl.functions.messages import EditChatDefaultBannedRightsRequest
@@ -65,6 +70,7 @@ MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
 UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
 basicConfig(format="%(name)s - %(message)s", level=WARNING)
 OWNER_ID = int(os.environ.get("OWNER_ID", None))
+
 #==========================================================================
 # For Inlines Of bot
 
@@ -108,6 +114,7 @@ async def _(event):
 			    Button.inline("Notes", data="noteshelp"),
 		    ],
 		    [
+			    Button.inline("Rules" , data="ruleshelp"),
 			    Button.inline("Welcome" , data="welcomehelp"),
 		    ],
 		    [
@@ -3066,6 +3073,66 @@ def get_chat(chat_id, chat_data):
         return {"status": False, "value": False}
 
 #======================================================================================
+
+# Rules
+@admin_cmd("rules",is_args=False)
+async def _(event):
+    if event.is_private:
+        return
+    chat_id = event.chat_id
+    sender = event.sender_id
+    rules = sql.get_rules(chat_id)
+    if rules:
+        await event.reply(
+            "Click on the below button to get this group's rules 👇",
+            buttons=[[Button.inline("Rules", data=f"start-rules-{sender}")]],
+        )
+    else:
+        await event.reply(
+            "The group admins haven't set any rules for this chat yet. "
+            "This probably doesn't mean it's lawless though...!"
+        )
+
+
+@adminbot.on(events.CallbackQuery(pattern=r"start-rules-(\d+)"))
+async def rm_warn(event):
+    rules = sql.get_rules(event.chat_id)
+    # print(rules)
+    user_id = int(event.pattern_match.group(1))
+    if not event.sender_id == user_id:
+        await event.answer("You haven't send that command !")
+        return
+    text = f"The rules for **{event.chat.title}** are:\n\n{rules}"
+    try:
+        await tbot.send_message(
+            user_id, text, parse_mode="markdown", link_preview=False
+        )
+    except Exception:
+        await event.answer(
+            "I can't send you the rules as you haven't started me in PM, first start me !",
+            alert=True,
+        )
+
+
+@admin_cmd("setrules",is_args="normal")
+@change_info
+async def _(event):
+    chat_id = event.chat_id
+    raw_text = event.text
+    args = raw_text.split(None, 1)
+    if len(args) == 2:
+        txt = args[1]
+        sql.set_rules(chat_id, txt)
+        await event.reply("Successfully set rules for this group.")
+
+
+@admin_cmd("clearrules",is_args=False)
+@change_info
+async def _(event):
+    chat_id = event.chat_id
+    sql.set_rules(chat_id, "")
+    await event.reply("Successfully cleared rules for this chat !")
+#======================================================================
 print("Admin Bot Started !!")
 
 
