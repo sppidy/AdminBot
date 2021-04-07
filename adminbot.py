@@ -1136,7 +1136,7 @@ from telethon.tl import functions
 from telethon.tl import types
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import *
-import bot.sql.rulesql as rulesql
+import bot.sql.rulessql as rulesql
 
 
 async def is_register_admin(chat, user):
