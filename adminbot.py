@@ -74,10 +74,11 @@ OWNER_ID = int(os.environ.get("OWNER_ID", None))
 # For Inlines Of bot
 
 @callback("backer")
-async def _(event):
-	botun = (await adminbot.get_me()).username
+async def _(event):	
+        botun = (await adminbot.get_me()).username
+        botname = (await adminbot.get_me()).first_name
 	await event.edit(
-		"Hi There, I am Adminstrator,\nI Help Admins To Manage Their Chats Easily\n\n - This Bot is Purely Made in Telethon",
+		f"Hi There, I am {botname},\nI Help Admins To Manage Their Chats Easily\n\n - This Bot is Purely Made in Telethon",
 		buttons=[
 			[
 				Button.inline("Help", data="helpstarter"),
@@ -94,8 +95,10 @@ async def _(event):
 
 @callback("helpstarter")
 async def _(event):
+    botun = (await adminbot.get_me()).username
+    botname = (await adminbot.get_me()).first_name
     await event.edit(
-	    "Hey there! I am Administrator.\nI help admins manage their groups with Pro Features!\nHave a look at the following for an idea of some of the things I can help you with.\n\nAll commands can either be used with /.\nAnd You May Check The Help for Plugins :"
+	    f"Hey there! I am {botname}.\nI help admins manage their groups with Pro Features!\nHave a look at the following for an idea of some of the things I can help you with.\n\nAll commands can either be used with /.\nAnd You May Check The Help for Plugins :"
 	    ,buttons=[
 		    [
 			    Button.inline("Bans", data="banhelp"),
@@ -113,6 +116,7 @@ async def _(event):
 			    Button.inline("Notes", data="noteshelp"),
 		    ],
 		    [
+			    Button.inline("Warns", data="warnhelp"),
 			    Button.inline("Welcome" , data="welcomehelp"),
 		    ],
 		    [
@@ -1119,6 +1123,416 @@ async def _(event):
     chat_id = event.chat_id
     sql.set_rules(chat_id, "")
     await event.reply("Successfully cleared rules for this chat !")
+#======================================================================
+#Warns
+
+import html
+import os
+from telethon import *
+from telethon.tl import *
+import bot.sql.warnsql as wsql
+from telethon.tl.types import ChatBannedRights
+from telethon.tl import functions
+from telethon.tl import types
+from telethon.tl.functions.channels import EditBannedRequest
+from telethon.tl.types import *
+import bot.sql.rulesql as rulesql
+
+
+async def is_register_admin(chat, user):
+    if isinstance(chat, (types.InputPeerChannel, types.InputChannel)):
+        return isinstance(
+            (
+                await adminbot(functions.channels.GetParticipantRequest(chat, user))
+            ).participant,
+            (types.ChannelParticipantAdmin, types.ChannelParticipantCreator),
+        )
+    if isinstance(chat, types.InputPeerUser):
+        return True
+
+@admin_cmd("warn", is_args=True)
+@can_restrict
+@is_bot_admin
+async def _(event):
+    try:
+        if event.fwd_from:
+            return
+        if event.is_private:
+            return
+        if event.is_group:
+                pass
+            else:
+                return
+        quew = event.pattern_match.group(1)
+
+        if event.reply_to_msg_id:
+            warn_reason = event.text[len("/warn ") :]
+            if not warn_reason:
+                await event.reply("Please provide a reason for warning.")
+                return
+            reply_message = await event.get_reply_message()
+            if not await is_register_admin(event.input_chat, reply_message.sender_id):
+                pass
+            else:
+                await event.reply("I am not gonna warn an admin")
+                return
+            if reply_message.sender_id == BOT_ID:
+                await event.reply("Why are you trying to warn me ?")
+                return
+            limit, soft_warn = wsql.get_warn_setting(event.chat_id)
+            num_warns, reasons = wsql.warn_user(
+                reply_message.sender_id, event.chat_id, warn_reason
+            )
+            if num_warns >= limit:
+                wsql.reset_warns(reply_message.sender_id, event.chat_id)
+                if wsql.get_warn_strength(event.chat_id) == "kick":
+                    await adminbot.kick_participant(event.chat_id, reply_message.sender_id)
+                    reply = "{} warnings, <u><a href='tg://user?id={}'>{}</a></u> has been kicked!".format(
+                        limit, reply_message.sender_id, reply_message.sender.first_name
+                    )
+                    await event.reply(reply, parse_mode="html")
+                    return
+                if wsql.get_warn_strength(event.chat_id) == "ban":
+                    BANNED_RIGHTS = ChatBannedRights(
+                        until_date=None,
+                        view_messages=True,
+                        send_messages=True,
+                        send_media=True,
+                        send_stickers=True,
+                        send_gifs=True,
+                        send_games=True,
+                        send_inline=True,
+                        embed_links=True,
+                    )
+                    await adminbot(
+                        EditBannedRequest(
+                            event.chat_id, reply_message.sender_id, BANNED_RIGHTS
+                        )
+                    )
+                    reply = "{} warnings, <u><a href='tg://user?id={}'>{}</a></u> has been banned!".format(
+                        limit, reply_message.sender_id, reply_message.sender.first_name
+                    )
+                    await event.reply(reply, parse_mode="html")
+                    return
+                if wsql.get_warn_strength(event.chat_id) == "mute":
+                    MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
+                    await adminbot(
+                        EditBannedRequest(
+                            event.chat_id, reply_message.sender_id, MUTE_RIGHTS
+                        )
+                    )
+                    reply = "{} warnings, <u><a href='tg://user?id={}'>{}</a></u> has been muted!".format(
+                        limit, reply_message.sender_id, reply_message.sender.first_name
+                    )
+                    await event.reply(reply, parse_mode="html")
+                    return
+            else:
+                reply = "<u><a href='tg://user?id={}'>{}</a></u> has {}/{} warnings... watch out!".format(
+                    reply_message.sender_id,
+                    reply_message.sender.first_name,
+                    num_warns,
+                    limit,
+                )
+                if warn_reason:
+                    reply += "\nReason: {}".format(html.escape(warn_reason))
+            chat_id = event.chat_id
+            rules = rulesql.get_rules(chat_id)
+            if rules:
+                await event.reply(
+                    reply,
+                    buttons=[
+                        [
+                            Button.inline(
+                                "Remove Warn ✖️",
+                                data=f"rm_warn-{reply_message.sender_id}",
+                            ),
+                            Button.inline(
+                                "Rules ✝️",
+                                data=f"start-ruleswarn-{reply_message.sender_id}",
+                            ),
+                        ]
+                    ],
+                    parse_mode="html",
+                )
+            else:
+                await event.reply(
+                    reply,
+                    buttons=[
+                        [
+                            Button.inline(
+                                "Remove Warn ✖️",
+                                data=f"rm_warn-{reply_message.sender_id}",
+                            )
+                        ]
+                    ],
+                    parse_mode="html",
+                )
+        if not event.reply_to_msg_id and quew:
+            if "|" in quew:
+                iid, reasonn = quew.split("|")
+            cid = iid.strip()
+            reason = reasonn.strip()
+            if cid.isnumeric():
+                cid = int(cid)
+            entity = await adminbot.get_entity(cid)
+            try:
+                r_sender_id = entity.id
+                r_sender_fname = entity.first_name
+            except Exception:
+                await event.reply("Couldn't fetch that user.")
+                return
+            if not reason:
+                await event.reply("Please provide a reason for warning.")
+                return
+            warn_reason = reason
+            if not await is_register_admin(event.input_chat, r_sender_id):
+                pass
+            else:
+                await event.reply("I am not gonna warn an admin")
+                return
+            if r_sender_id == BOT_ID:
+                await event.reply("Why are you trying to warn me ?")
+                return
+            limit, soft_warn = wsql.get_warn_setting(event.chat_id)
+            num_warns, reasons = wsql.warn_user(r_sender_id, event.chat_id, warn_reason)
+            if num_warns >= limit:
+                wsql.reset_warns(r_sender_id, event.chat_id)
+                if wsql.get_warn_strength(event.chat_id) == "kick":
+                    await adminbot.kick_participant(event.chat_id, r_sender_id)
+                    reply = "{} warnings, <u><a href='tg://user?id={}'>{}</a></u> has been kicked!".format(
+                        limit, r_sender_id, r_sender_fname
+                    )
+                    await event.reply(reply, parse_mode="html")
+                    return
+                if wsql.get_warn_strength(event.chat_id) == "ban":
+                    BANNED_RIGHTS = ChatBannedRights(
+                        until_date=None,
+                        view_messages=True,
+                        send_messages=True,
+                        send_media=True,
+                        send_stickers=True,
+                        send_gifs=True,
+                        send_games=True,
+                        send_inline=True,
+                        embed_links=True,
+                    )
+                    await adminbot(
+                        EditBannedRequest(event.chat_id, r_sender_id, BANNED_RIGHTS)
+                    )
+                    reply = "{} warnings, <u><a href='tg://user?id={}'>{}</a></u> has been banned!".format(
+                        limit, r_sender_id, r_sender_fname
+                    )
+                    await event.reply(reply, parse_mode="html")
+                    return
+                if wsql.get_warn_strength(event.chat_id) == "mute":
+                    MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
+                    await adminbot(
+                        EditBannedRequest(event.chat_id, r_sender_id, MUTE_RIGHTS)
+                    )
+                    reply = "{} warnings, <u><a href='tg://user?id={}'>{}</a></u> has been muted!".format(
+                        limit, r_sender_id, r_sender_fname
+                    )
+                    await event.reply(reply, parse_mode="html")
+                    return
+            else:
+                reply = "<u><a href='tg://user?id={}'>{}</a></u> has {}/{} warnings... watch out!".format(
+                    r_sender_id, r_sender_fname, num_warns, limit
+                )
+                if warn_reason:
+                    reply += "\nReason: {}".format(html.escape(warn_reason))
+            chat_id = event.chat_id
+            rules = rulesql.get_rules(chat_id)
+            if rules:
+                await event.reply(
+                    reply,
+                    buttons=[
+                        [
+                            Button.inline(
+                                "Remove Warn ✖️", data=f"rm_warn-{r_sender_id}"
+                            ),
+                            Button.inline(
+                                "Rules ✝️", data=f"start-ruleswarn-{r_sender_id}"
+                            ),
+                        ]
+                    ],
+                    parse_mode="html",
+                )
+            else:
+                await event.reply(
+                    reply,
+                    buttons=[
+                        [Button.inline("Remove Warn ✖️", data=f"rm_warn-{r_sender_id}")]
+                    ],
+                    parse_mode="html",
+                )
+    except Exception as e:
+        print(e)
+
+
+@adminbot.on(events.CallbackQuery(pattern=r"start-ruleswarn-(\d+)"))
+async def rm_warn(event):
+    rules = rulesql.get_rules(event.chat_id)
+    if not rules:
+        rules = "The group admins haven't set any rules for that chat yet.\nThis probably doesn't mean it's lawless though...!"
+    user_id = int(event.pattern_match.group(1))
+    if not event.sender_id == user_id:
+        await event.answer("You haven't been warned !")
+        return
+    text = f"The rules for **{event.chat.title}** are:\n\n{rules}"
+    try:
+        await adminbot.send_message(
+            user_id, text, parse_mode="markdown", link_preview=False
+        )
+    except Exception:
+        await event.answer(
+            "I can't send you the rules as you haven't started me in PM, first start me !",
+            alert=True,
+        )
+
+
+@adminbot.on(events.CallbackQuery(pattern=r"rm_warn-(\d+)"))
+async def rm_warn(event):
+    try:
+        if event.is_group:
+            if await is_register_admin(event.input_chat, event.sender_id):
+                pass
+            else:
+                await event.answer("You need to be an admin to do this", alert=False)
+                return
+            sender = await event.get_sender()
+            sid = sender.id
+            user_id = int(event.pattern_match.group(1))
+            result = wsql.get_warns(user_id, event.chat_id)
+            if not result and result[0] != 0:
+                await event.answer("This user hasn't got any warnings!", alert=False)
+                return
+            wsql.remove_warn(user_id, event.chat_id)
+            await event.edit(
+                f"Warn removed by <u><a href='tg://user?id={sid}'>user</a></u> ",
+                parse_mode="html",
+            )
+        else:
+            return
+    except:
+        await event.answer(
+            "Sorry the button link has expired, pls use /removelastwarn to manually remove warns",
+            alert=True,
+        )
+
+
+@admin_cmd("getwarns",is_args=False)
+@is_bot_admin
+@can_restrict
+async def _(event):
+    if event.fwd_from:
+        return
+    if event.is_private:
+        return
+    if event.is_group:
+        if await is_register_admin(event.input_chat, event.message.sender_id):
+            pass
+
+        else:
+            return
+    reply_message = await event.get_reply_message()
+    if not await is_register_admin(event.input_chat, reply_message.sender_id):
+        pass
+    else:
+        await event.reply("I am not gonna get warns of an admin")
+        return
+    result = wsql.get_warns(reply_message.sender_id, event.chat_id)
+    if result and result[0] != 0:
+        num_warns, reasons = result
+        limit, soft_warn = wsql.get_warn_setting(event.chat_id)
+        if reasons:
+            text = "This user has {}/{} warnings, for the following reasons:".format(
+                num_warns, limit
+            )
+            text += "\r\n"
+            text += reasons
+            await event.reply(text)
+        else:
+            await event.reply(
+                "This user has {} / {} warning, but no reasons for any of them.".format(
+                    num_warns, limit
+                )
+            )
+    else:
+        await event.reply("This user hasn't got any warnings!")
+
+
+@admin_cmd("dellastwarn", is_args=False)
+@can_restrict
+@is_bot_admin
+async def _(event):
+    if event.fwd_from:
+        return
+    if event.is_private:
+        return
+    if event.is_group:
+        if await is_register_admin(event.input_chat, event.message.sender_id):
+            pass
+        else:
+            return
+    reply_message = await event.get_reply_message()
+    if not await is_register_admin(event.input_chat, reply_message.sender_id):
+        pass
+    else:
+        await event.reply("I am not gonna remove warn of an admin")
+        return
+    result = wsql.get_warns(reply_message.sender_id, event.chat_id)
+    if not result and result[0] != 0:
+        await event.reply("This user hasn't got any warnings!")
+        return
+    wsql.remove_warn(reply_message.sender_id, event.chat_id)
+    await event.reply("Removed last warn of that user.")
+
+
+@admin_cmd("resetwarns",is_args=False)
+@can_restrict
+@is_bot_admin
+async def _(event):
+    if event.fwd_from:
+        return
+    if event.is_private:
+        return
+    if event.is_group:
+        if await is_register_admin(event.input_chat, event.message.sender_id):
+            pass
+
+        else:
+            return
+    reply_message = await event.get_reply_message()
+    if not await is_register_admin(event.input_chat, reply_message.sender_id):
+        pass
+    else:
+        await event.reply("I am not gonna reset warn of an admin")
+        return
+    wsql.reset_warns(reply_message.sender_id, event.chat_id)
+    await event.reply("Warns for this user have been reset!")
+
+
+@admin_cmd("setwarnmode",is_args="simple")
+@can_restrict
+@is_bot_admin
+@change_info
+async def _(event):
+    if event.fwd_from:
+        return
+    if event.is_private:
+        return
+    if event.is_group:
+        pass
+    else:
+        return
+    input = event.pattern_match.group(1)
+    if not input == "kick" and not input == "mute" and not input == "ban":
+        await event.reply("I only understand by kick/ban/mute")
+        return
+    wsql.set_warn_strength(event.chat_id, input)
+    await event.reply(f"Too many warns will now result in **{input}**")
+
+
 #======================================================================
 print("Admin Bot Started !!")
 
