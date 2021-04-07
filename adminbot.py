@@ -1161,7 +1161,7 @@ async def _(event):
             return
         if event.is_group:
                 pass
-            else:
+        else:
                 return
         quew = event.pattern_match.group(1)
 
@@ -1431,7 +1431,6 @@ async def _(event):
     if event.is_group:
         if await is_register_admin(event.input_chat, event.message.sender_id):
             pass
-
         else:
             return
     reply_message = await event.get_reply_message()
