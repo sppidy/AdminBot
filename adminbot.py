@@ -1351,10 +1351,12 @@ async def _(event):
                             Button.inline(
                                 "Remove Warn ✖️", data=f"rm_warn-{r_sender_id}"
                             ),
+			],
+			[
                             Button.inline(
                                 "Rules ✝️", data=f"start-ruleswarn-{r_sender_id}"
                             ),
-                        ]
+                        ],
                     ],
                     parse_mode="html",
                 )
@@ -1374,7 +1376,7 @@ async def _(event):
 async def rm_warn(event):
     rules = rulesql.get_rules(event.chat_id)
     if not rules:
-        rules = "The group admins haven't set any rules for that chat yet.\nThis probably doesn't mean it's lawless though...!"
+        rules = "No Rules Set For This Chat Currently"
     user_id = int(event.pattern_match.group(1))
     if not event.sender_id == user_id:
         await event.answer("You haven't been warned !")
@@ -1402,6 +1404,7 @@ async def rm_warn(event):
                 return
             sender = await event.get_sender()
             sid = sender.id
+	    sname = sender.first_name
             user_id = int(event.pattern_match.group(1))
             result = wsql.get_warns(user_id, event.chat_id)
             if not result and result[0] != 0:
@@ -1409,7 +1412,7 @@ async def rm_warn(event):
                 return
             wsql.remove_warn(user_id, event.chat_id)
             await event.edit(
-                f"Warn removed by <u><a href='tg://user?id={sid}'>user</a></u> ",
+                f"Warn removed by <u><a href='tg://user?id={sid}'>{sname}</a></u> ",
                 parse_mode="html",
             )
         else:
