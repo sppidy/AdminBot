@@ -1154,6 +1154,7 @@ async def is_register_admin(chat, user):
 @can_restrict
 @is_bot_admin
 async def _(event):
+    BOT_ID = (await adminbot.get_me()).id
     try:
         if event.fwd_from:
             return
