@@ -1403,8 +1403,7 @@ async def rm_warn(event):
                 await event.answer("You need to be an admin to do this", alert=False)
                 return
             sender = await event.get_sender()
-            sid = sender.id
-	    sendername = sender.first_name
+            sid = sender.id,sendername = sender.first_name
             user_id = int(event.pattern_match.group(1))
             result = wsql.get_warns(user_id, event.chat_id)
             if not result and result[0] != 0:
