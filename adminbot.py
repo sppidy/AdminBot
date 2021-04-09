@@ -1404,7 +1404,7 @@ async def rm_warn(event):
                 return
             sender = await event.get_sender()
             sid = sender.id
-	    sname = sender.first_name
+	    sendername = sender.first_name
             user_id = int(event.pattern_match.group(1))
             result = wsql.get_warns(user_id, event.chat_id)
             if not result and result[0] != 0:
@@ -1412,7 +1412,7 @@ async def rm_warn(event):
                 return
             wsql.remove_warn(user_id, event.chat_id)
             await event.edit(
-                f"Warn removed by <u><a href='tg://user?id={sid}'>{sname}</a></u> ",
+                f"Warn removed by <u><a href='tg://user?id={sid}'>{sendername}</a></u> ",
                 parse_mode="html",
             )
         else:
