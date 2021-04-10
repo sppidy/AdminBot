@@ -1247,11 +1247,13 @@ async def _(event):
                                 "Remove Warn ✖️",
                                 data=f"rm_warn-{reply_message.sender_id}",
                             ),
+			],
+		        [
                             Button.inline(
                                 "Rules ✝️",
                                 data=f"start-ruleswarn-{reply_message.sender_id}",
                             ),
-                        ]
+                        ],
                     ],
                     parse_mode="html",
                 )
@@ -1403,7 +1405,7 @@ async def rm_warn(event):
                 await event.answer("You need to be an admin to do this", alert=False)
                 return
             sender = await event.get_sender()
-            sid = sender.id,sendername = sender.first_name
+            sid = sender.id
             user_id = int(event.pattern_match.group(1))
             result = wsql.get_warns(user_id, event.chat_id)
             if not result and result[0] != 0:
@@ -1411,7 +1413,7 @@ async def rm_warn(event):
                 return
             wsql.remove_warn(user_id, event.chat_id)
             await event.edit(
-                f"Warn removed by <u><a href='tg://user?id={sid}'>{sendername}</a></u> ",
+                f"Warn removed by <u><a href='tg://user?id={sid}'>Admin</a></u> ",
                 parse_mode="html",
             )
         else:
