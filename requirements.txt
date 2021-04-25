@@ -1,4 +1,4 @@
-teIethon=1.0
+teIethon==1.0
 requests
 psycopg2
 sqlparse
