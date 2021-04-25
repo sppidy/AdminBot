@@ -1675,7 +1675,7 @@ async def _(event):
         ansql.set_flood(chat, 0)
 
 
-@admincmd("setfloodlimit", is_args="simple")
+@admin_cmd("setfloodlimit", is_args="simple")
 async def _(event):
     if event.is_private:
         return
@@ -1717,7 +1717,7 @@ async def _(event):
         await event.reply("Invalid argument please use a number or 'off'")
 
 
-@register("flood", is_args=False)
+@admin_cmd("flood", is_args=False)
 async def _(event):
     if event.is_private:
         return
@@ -1736,7 +1736,7 @@ async def _(event):
         )
 
 
-@register("setfloodmode", is_args="simple")
+@admin_cmd("setfloodmode", is_args="simple")
 async def _(event):
     try:
         if event.is_private:
