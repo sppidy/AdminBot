@@ -2,3 +2,4 @@ utilsrobot==3.4
 requests
 psycopg2
 sqlparse
+tldextract
