@@ -1,4 +1,4 @@
-utilsrobot==3.3
+utilsrobot==3.4
 requests
 psycopg2
 sqlparse
