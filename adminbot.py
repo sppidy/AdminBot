@@ -1837,7 +1837,6 @@ import re
 from telethon import events
 import bot.sql.blacklistsql as bsql
 import bot.sql.urlblacklistsql as urlsql
-from julia.events import register
 from telethon import types
 from telethon.tl import functions
 import html
