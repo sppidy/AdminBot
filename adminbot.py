@@ -1835,8 +1835,8 @@ Examples of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks.
 import os
 import re
 from telethon import events
-import bot.sql.blacklistbsql as bsql
-import bot.sql.urlblacklistbsql as urlsql
+import bot.sql.blacklistsql as bsql
+import bot.sql.urlblacklistsql as urlsql
 from julia.events import register
 from telethon import types
 from telethon.tl import functions
