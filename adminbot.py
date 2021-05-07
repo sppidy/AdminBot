@@ -30,6 +30,10 @@ import logging
 from logging import DEBUG, INFO, basicConfig, getLogger,WARNING
 from telethon.tl.functions.messages import EditChatDefaultBannedRightsRequest
 from telethon.tl.types import ChatBannedRights
+from bot.config import Config
+
+OWNER = Config.OWNER_ID
+
 # =================== CONSTANT ===================
 PP_TOO_SMOL = "`The image is too small`"
 PP_ERROR = "`Failure while processing the image`"
@@ -69,7 +73,7 @@ UNBAN_RIGHTS = ChatBannedRights(
 MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
 UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
 basicConfig(format="%(name)s - %(message)s", level=WARNING)
-OWNER_ID = int(os.environ.get("OWNER_ID", None))
+OWNER_ID = OWNER
 
 #==========================================================================
 # For Inlines Of bot
