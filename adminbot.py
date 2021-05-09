@@ -89,8 +89,8 @@ async def _(event):
 			    Button.inline("Help", data="helpstarter"),
 		    ],
 		    [
-			    Button.url("Updates Channel", url="https://t.me/ProBotz"),
-			    Button.url("Support Group", url="https://t.me/ProBotzSupport"),
+			    Button.url("Updates Channel", url="https://t.me/FutureCodes"),
+			    Button.url("Support Group", url="https://t.me/FutureCodesChat"),
 		    ],
 		    [
 			    Button.url("Add To Group  👥", f"https://t.me/{botun}?startgroup=true"),
@@ -152,8 +152,8 @@ async def _(event):
 					Button.inline("Help", data="helpstarter"),
 			        ],
 			        [
-					Button.url("Updates Channel", url="https://t.me/ProBotz"),
-					Button.url("Support Group", url="https://t.me/ProBotzSupport"),
+					Button.url("Updates Channel", url="https://t.me/FutureCodes"),
+					Button.url("Support Group", url="https://t.me/FutureCodesChat"),
 				],
 				[      
 				        Button.url("Add To Group  👥", f"https://t.me/{botun}?startgroup=true"),
