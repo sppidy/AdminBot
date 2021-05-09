@@ -126,7 +126,7 @@ async def _(event):
 			    Button.inline("Warns", data="warnhelp"),
 		    ],
 		    [
-			    Button.inline("Welcome / Goodbye" , data="welcomehelp"),
+			    Button.inline("Welcomes" , data="welcomehelp"),
 		    ],
 		    [
 			    Button.inline("<-- Back" , data="backer"),
