@@ -83,7 +83,7 @@ async def _(event):
     botun = (await adminbot.get_me()).username
     botname = (await adminbot.get_me()).first_name
     await event.edit(
-	    f"Hi There, I am {botname},\nI Help Admins To Manage Their Chats Easily\n\n - This Bot is Purely Made in Telethon",
+	    f"Hi There, I am {botname},\nI Help Admins To Manage Their Chats Easily\n\n - This Bot is Purely Made in Telethon..\n\nJoin Our Updates Channel for Updates and Support Group for help",
 	    buttons=[
 		    [
 			    Button.inline("Help", data="helpstarter"),
@@ -103,7 +103,7 @@ async def _(event):
     botun = (await adminbot.get_me()).username
     botname = (await adminbot.get_me()).first_name
     await event.edit(
-	    f"Hey there! I am {botname}.\nI help admins manage their groups with Pro Features!\nHave a look at the following for an idea of some of the things I can help you with.\n\nAll commands can either be used with /.\nAnd You May Check The Help for Plugins :"
+	    f"Hey there! I am {botname}.\nI help admins manage their groups with Pro Features!\nHave a look at the following for an idea of some of the things I can help you with.\n\nAll commands can be used with /.\nAnd You May Check The Help for Plugins :"
 	    ,buttons=[
 		    [
 			    Button.inline("Antiflood", data="antifloodhelp"),
@@ -146,7 +146,7 @@ async def _(event):
 		botun = (await adminbot.get_me()).username
 		botname = (await adminbot.get_me()).first_name
 		return await event.reply(
-			f"Hi There, I am {botname},\nI Help Admins To Mange Their Chats Easily\n\n - This Bot is Purely Made in Telethon",
+			f"Hi There, I am {botname},\nI Help Admins To Mange Their Chats Easily\n\n - This Bot is Purely Made in Telethon....\n\nJoin Our Updates Channel for Updates and Support Group for help",
 			buttons=[
 				[
 					Button.inline("Help", data="helpstarter"),
