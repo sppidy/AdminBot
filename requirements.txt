@@ -4,3 +4,5 @@ psycopg2-binary
 sqlparse
 tldextract
 psycopg2
+sqlalchemy
+sqlalchemy-redshift
