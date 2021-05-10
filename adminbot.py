@@ -139,27 +139,33 @@ async def _(event):
 @admin_cmd("start", is_args="simple")
 async def _(event):
 	if event.is_group:
-	    botun = (await adminbot.get_me()).username
-	    botname = (await adminbot.get_me()).first_name
-	    return await event.reply(f"Hi There, I am {botname}\nTo know More PM Me",buttons=[Button.url("Start Me In PM", url=f"https://t.me/{botun}?start")])
-	elif not event.is_group:
+	    try :
 		botun = (await adminbot.get_me()).username
 		botname = (await adminbot.get_me()).first_name
-		return await event.reply(
-			f"Hi There, I am {botname},\nI Help Admins To Mange Their Chats Easily\n\n - This Bot is Purely Made in Telethon....\n\nJoin Our Updates Channel for Updates and Support Group for help",
-			buttons=[
-				[
-					Button.inline("Help", data="helpstarter"),
-			        ],
-			        [
-					Button.url("Updates Channel", url="https://t.me/FutureCodes"),
-					Button.url("Support Group", url="https://t.me/FutureCodesChat"),
-				],
-				[      
+		return await event.reply(f"Hi There, I am {botname}\nTo know More PM Me",buttons=[Button.url("Start Me In PM", url=f"https://t.me/{botun}?start")])
+	    except BaseException:
+		pass
+	elif not event.is_group:
+		try :
+			botun = (await adminbot.get_me()).username
+			botname = (await adminbot.get_me()).first_name
+			return await event.reply(
+				f"Hi There, I am {botname},\nI Help Admins To Mange Their Chats Easily\n\n - This Bot is Purely Made in Telethon....\n\nJoin Our Updates Channel for Updates and Support Group for help",
+				buttons=[
+					[
+						Button.inline("Help", data="helpstarter"),
+					],
+					[
+						Button.url("Updates Channel", url="https://t.me/FutureCodes"),
+						Button.url("Support Group", url="https://t.me/FutureCodesChat"),
+					],
+					[      
 				        Button.url("Add To Group  👥", f"https://t.me/{botun}?startgroup=true"),
-			        ],
-			],
-		)
+					],
+				],
+			)
+		except BaseException:
+			pass
 	
 #==========================================================================
 # Admin Module
