@@ -27,6 +27,15 @@
     "API_HASH": {
       "description": "Get this value from my.telegram.org! Please do not steal",
       "value": ""
+    },
+    "DATABASE_URL": {
+      "description": "Leave This Blank"
+      "required":false
+      "value": ""
+    },
+    "OWNER_ID": {
+      "description": "Fill Your User ID"
+      "value": ""
     }
   },
   "buildpacks": [
