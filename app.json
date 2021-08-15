@@ -33,8 +33,7 @@
     {
       "url": "heroku/python"
     }
- ]
- },
+ ],
  "addons": [{
    "plan": "heroku-postgresql",
 	 "options": {
