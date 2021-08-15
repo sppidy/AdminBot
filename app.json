@@ -30,8 +30,8 @@
     },
     "DATABASE_URL": {
       "description": "Leave This Blank"
-      "required":false
       "value": ""
+      "required": false
     },
     "OWNER_ID": {
       "description": "Fill Your User ID"
