@@ -1,4 +1,4 @@
-git+https://sppidy:Ramingoogle1@github.com/sppidy/UtilsRobot
+utilsrobot==3.7
 requests
 psycopg2-binary
 sqlparse
