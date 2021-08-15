@@ -1,14 +1,14 @@
 {
-  "name": "Google Translator Bot",
-  "description": "Simple Translator Bot in Telethon.",
-  "logo": "https://images.discordapp.net/avatars/224415693393625088/8f6a0ca7e883f87241b02ba8e1328f34.png",
+  "name": "Admin Bot",
+  "description": "Simple Administrative Bot in Telethon.",
+  "logo": "https://gblobscdn.gitbook.com/spaces%2F-MYnLdQ3RcVoSGvO_bML%2Favatar-1618990539072.png?alt=media",
   "keywords": [
-    "telegram transltor",
+    "telegram security",
     "plugin",
     "telegram-bot",
     "productivity"
   ],
-  "repository": "https://github.com/sppidy/CrackingToolsBot",
+  "repository": "https://github.com/sppidy/AdminBot",
   "website": "sppidy.me",
   "success_url": "t.me/sppidy",
   "env": {
@@ -34,5 +34,11 @@
       "url": "heroku/python"
     }
  ]
-	
+ },
+ "addons": [{
+   "plan": "heroku-postgresql",
+	 "options": {
+		 "version": "9.6"
+	 }
+ }]
 }
