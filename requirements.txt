@@ -1,4 +1,4 @@
-utilsrobot==3.8
+utilsrobot==3.9
 requests
 psycopg2-binary
 sqlparse
@@ -6,4 +6,3 @@ tldextract
 psycopg2
 sqlalchemy
 sqlalchemy-redshift
-flask-mysqldb
