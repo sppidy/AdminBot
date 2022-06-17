@@ -6,3 +6,4 @@ tldextract
 psycopg2
 sqlalchemy
 sqlalchemy-redshift
+flask-mysqldb
